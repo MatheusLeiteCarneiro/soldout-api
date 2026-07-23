@@ -1,0 +1,98 @@
+@startuml
+
+hide empty members
+skinparam classAttributeIconSize 0
+
+together {
+  class Event {
+    UUID id
+    String name
+    Instant startsAt
+    Instant endsAt
+    EventStatus status
+  }
+  enum EventStatus {
+    DRAFT
+    PUBLISHED
+    CANCELLED
+    FINISHED
+  }
+}
+
+class TicketType {
+  UUID id
+  String name
+  BigDecimal price
+  int totalQuantity
+  int availableQuantity
+  long version
+}
+
+class User {
+  UUID id
+  String email
+  String name
+}
+
+together {
+  class Order {
+    UUID id
+    Instant createdAt
+    Instant reservedUntil
+    Instant paidAt
+    OrderStatus status
+    BigDecimal totalAmount
+  }
+  enum OrderStatus {
+    PENDING
+    PAID
+    CANCELLED
+    REFUNDED
+  }
+}
+
+class OrderItem {
+  UUID id
+  int quantity
+  BigDecimal unitPrice
+}
+
+together {
+  class Ticket {
+    UUID id
+    UUID code
+    TicketStatus status
+    Instant usedAt
+  }
+  enum TicketStatus {
+    VALID
+    USED
+    CANCELLED
+  }
+}
+
+Event "1 event" *-- "0..* ticketTypes" TicketType
+User "1 buyer" --> "0..* orders" Order
+Order "1 order" *-- "1..* items" OrderItem
+OrderItem "1 orderItem" --> "1..* tickets" Ticket
+OrderItem "0..* items" --> "1 ticketType" TicketType
+note bottom of TicketType
+  Stock guarded by optimistic locking (version).
+  availableQuantity is the source of truth
+  under concurrent access.
+end note
+
+note bottom of Order
+  PENDING holds stock until reservedUntil;
+  expired reservations release it back.
+  Invariant: all items in an Order
+  belong to the same Event.
+end note
+
+note bottom of Ticket
+  Owns its lifecycle (VALID -> USED / CANCELLED).
+  Issued by OrderItem but never deleted with it:
+  refunds transition to CANCELLED.
+end note
+
+@enduml

@@ -257,6 +257,22 @@ class EventTest {
         }
 
         @Test
+        void shouldRejectNullName() {
+            Event event = draftEvent();
+
+            assertThatThrownBy(() -> event.updateDetails(null, "new description"))
+                    .isInstanceOf(NullPointerException.class);
+        }
+
+        @Test
+        void shouldRejectNullDescription() {
+            Event event = draftEvent();
+
+            assertThatThrownBy(() -> event.updateDetails("new name", null))
+                    .isInstanceOf(NullPointerException.class);
+        }
+
+        @Test
         void shouldRejectUpdatingFinishedEvent() {
             Event event = finishedEvent();
 
@@ -298,6 +314,24 @@ class EventTest {
             assertThatThrownBy(() -> event.reschedule(endsAt, startsAt))
                     .isInstanceOf(InvalidEventException.class)
                     .hasMessageContaining("endsAt must be after startsAt");
+        }
+
+        @Test
+        void shouldRejectNullStartDate() {
+            Event event = draftEvent();
+            Instant newEnd = endsAt.plus(ONE_DAY);
+
+            assertThatThrownBy(() -> event.reschedule(null, newEnd))
+                    .isInstanceOf(NullPointerException.class);
+        }
+
+        @Test
+        void shouldRejectNullEndDate() {
+            Event event = draftEvent();
+            Instant newStart = startsAt.plus(ONE_DAY);
+
+            assertThatThrownBy(() -> event.reschedule(newStart, null))
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test
@@ -351,6 +385,30 @@ class EventTest {
             event.addTicketType("Regular", "Regular ticket", new BigDecimal("150.00"), 500);
 
             assertThat(event.getTicketTypes()).hasSize(2);
+        }
+
+        @Test
+        void shouldRejectNullTicketName() {
+            Event event = draftEvent();
+
+            assertThatThrownBy(() -> event.addTicketType(null, "Student ticket", TICKET_PRICE, 200))
+                    .isInstanceOf(NullPointerException.class);
+        }
+
+        @Test
+        void shouldRejectNullTicketDescription() {
+            Event event = draftEvent();
+
+            assertThatThrownBy(() -> event.addTicketType("Student", null, TICKET_PRICE, 200))
+                    .isInstanceOf(NullPointerException.class);
+        }
+
+        @Test
+        void shouldRejectNullTicketPrice() {
+            Event event = draftEvent();
+
+            assertThatThrownBy(() -> event.addTicketType("Student", "Student ticket", null, 200))
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test

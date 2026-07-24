@@ -7,6 +7,7 @@ together {
   class Event {
     UUID id
     String name
+    String description
     Instant startsAt
     Instant endsAt
     EventStatus status

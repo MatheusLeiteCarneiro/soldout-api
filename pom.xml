@@ -21,6 +21,7 @@
         <springdoc.version>3.0.3</springdoc.version>
         <rest-assured.version>6.0.0</rest-assured.version>
         <uuid-creator.version>6.1.1</uuid-creator.version>
+        <jacoco.version>0.8.14</jacoco.version>
     </properties>
 
     <dependencies>
@@ -167,6 +168,35 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/mlcdev/soldout/SoldOutApplication.class</exclude>
+                        <exclude>com/mlcdev/soldout/**/exceptions/**</exclude>
+                        <exclude>com/mlcdev/soldout/shared/IdGenerator.class</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/jacoco-report</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

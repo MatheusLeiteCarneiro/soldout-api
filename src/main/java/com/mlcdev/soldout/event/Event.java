@@ -1,11 +1,14 @@
 package com.mlcdev.soldout.event;
 
+import com.mlcdev.soldout.event.exceptions.InvalidEventException;
 import com.mlcdev.soldout.shared.IdGenerator;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -13,7 +16,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -45,6 +52,10 @@ public class Event {
     @Column(nullable = false, length = 20)
     private EventStatus status;
 
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter(AccessLevel.NONE)
+    private Set<TicketType> ticketTypes = new HashSet<>();
+
     public Event(@NonNull String name,
                  @NonNull String description,
                  @NonNull Instant startsAt,
@@ -61,13 +72,13 @@ public class Event {
     }
 
     public void updateDetails(@NonNull String name, @NonNull String description) {
-        ensureEditable();
+        ensureEventAvailable();
         this.name = name.trim();
         this.description = description.trim();
     }
 
     public void reschedule(@NonNull Instant startsAt, @NonNull Instant endsAt) {
-        ensureEditable();
+        ensureEventAvailable();
         validatePeriod(startsAt, endsAt);
 
         this.startsAt = startsAt;
@@ -100,15 +111,30 @@ public class Event {
         this.status = EventStatus.FINISHED;
     }
 
+    public void addTicketType(@NonNull String ticketName, @NonNull String ticketDescription, @NonNull BigDecimal ticketPrice, int ticketTotalQuantity) {
+        ensureEventAvailable();
+        ticketTypes.add(new TicketType(ticketName, ticketDescription, ticketPrice, ticketTotalQuantity, this));
+    }
+
+    public boolean isPublished() {
+        return status == EventStatus.PUBLISHED;
+    }
+
+
+    public Set<TicketType> getTicketTypes() {
+        return Collections.unmodifiableSet(ticketTypes);
+    }
+
     private void validatePeriod(Instant startsAt, Instant endsAt) {
         if (!endsAt.isAfter(startsAt)) {
             throw new InvalidEventException("endsAt must be after startsAt");
         }
     }
 
-    private void ensureEditable() {
+    private void ensureEventAvailable() {
         if (status == EventStatus.FINISHED || status == EventStatus.CANCELLED) {
             throw new InvalidEventException("cannot modify an event with status " + status);
         }
     }
+
 }

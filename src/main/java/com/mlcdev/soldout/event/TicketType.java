@@ -3,7 +3,7 @@ package com.mlcdev.soldout.event;
 import com.mlcdev.soldout.event.exceptions.InvalidTicketTypeException;
 import com.mlcdev.soldout.event.exceptions.InventoryInconsistencyException;
 import com.mlcdev.soldout.event.exceptions.NotEnoughTicketsException;
-import com.mlcdev.soldout.shared.IdGenerator;
+import com.mlcdev.soldout.shared.utils.IdGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -1,4 +1,4 @@
-package com.mlcdev.soldout.shared;
+package com.mlcdev.soldout.shared.utils;
 
 import com.github.f4b6a3.uuid.UuidCreator;
 

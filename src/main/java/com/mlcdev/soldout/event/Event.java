@@ -1,7 +1,9 @@
 package com.mlcdev.soldout.event;
 
 import com.mlcdev.soldout.event.exceptions.InvalidEventException;
-import com.mlcdev.soldout.shared.IdGenerator;
+import com.mlcdev.soldout.event.exceptions.InvalidTicketTypeException;
+import com.mlcdev.soldout.event.exceptions.TicketTypeNotFoundException;
+import com.mlcdev.soldout.shared.utils.IdGenerator;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

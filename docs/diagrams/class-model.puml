@@ -26,7 +26,6 @@ class TicketType {
   BigDecimal price
   int totalQuantity
   int availableQuantity
-  long version
 }
 
 class User {
@@ -78,9 +77,10 @@ Order "1 order" *-- "1..* items" OrderItem
 OrderItem "1 orderItem" --> "1..* tickets" Ticket
 OrderItem "0..* items" --> "1 ticketType" TicketType
 note bottom of TicketType
-  Stock guarded by optimistic locking (version).
-  availableQuantity is the source of truth
-  under concurrent access.
+  Stock is read with a pessimistic write lock
+  during reservation, so concurrent buyers are
+  serialized on this row.
+  availableQuantity is the source of truth.
 end note
 
 note bottom of Order

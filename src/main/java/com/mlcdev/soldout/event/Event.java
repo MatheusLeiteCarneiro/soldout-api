@@ -118,6 +118,19 @@ public class Event {
         ticketTypes.add(new TicketType(ticketName, ticketDescription, ticketPrice, ticketTotalQuantity, this));
     }
 
+    public void removeTicketType(@NonNull UUID ticketTypeId) {
+        ensureEventAvailable();
+        TicketType found = ticketTypes.stream()
+                .filter(t -> t.getId().equals(ticketTypeId))
+                .findFirst()
+                .orElseThrow(() -> new TicketTypeNotFoundException(ticketTypeId));
+        if (found.getAvailableQuantity() != found.getTotalQuantity()) {
+            throw new InvalidTicketTypeException("cannot remove a ticket type with reserved tickets");
+        }
+        ticketTypes.remove(found);
+
+    }
+
     public boolean isPublished() {
         return status == EventStatus.PUBLISHED;
     }

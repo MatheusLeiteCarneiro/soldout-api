@@ -1,0 +1,26 @@
+@startuml
+start
+:Initialize latches, counters and executor;
+:Submit one task per buyer;
+:Each task waits on startLatch;
+:Main thread releases startLatch;
+:All threads call reserve() simultaneously;
+
+if (Reservation successful?) then (yes)
+  :increment successCount;
+else (no)
+  :increment failureCount and store exception;
+endif
+
+if (successCount > available tickets?) then (yes)
+:OVERSOLD — lost update occurred; <<#Pink>>
+else (no)
+  :Stock integrity preserved; <<#LightGreen>>
+endif
+stop
+
+note right
+  Observed: 7 successes for 1 available ticket
+  (result varies between runs)
+end note
+@enduml

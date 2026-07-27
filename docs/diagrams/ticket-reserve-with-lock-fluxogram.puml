@@ -1,0 +1,29 @@
+@startuml
+start
+:reserve(ticketTypeId, quantity);
+:load TicketType with SELECT FOR UPDATE
+ (event fetched in the same query);
+note right
+  concurrent callers block here
+  until the current transaction commits
+end note
+
+if (TicketType exists?) then (no)
+  :throw TicketTypeNotFoundException; <<#Pink>>
+  stop
+endif
+
+if (Event published?) then (no)
+  :throw InvalidEventException; <<#Pink>>
+  stop
+endif
+
+if (Enough stock?) then (no)
+  :throw NotEnoughTicketsException; <<#Pink>>
+  stop
+endif
+
+:decrement availableQuantity; <<#LightGreen>>
+:commit — lock released, next caller proceeds;
+stop
+@enduml

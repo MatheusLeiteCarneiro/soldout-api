@@ -21,7 +21,7 @@ public class TicketTypeService {
 
         Event event = ticketType.getEvent();
         if(!event.isPublished()){
-            throw new InvalidEventException("cannot reserve tickets for events with status: " + event.getStatus() + " reservations only for published events");
+            throw new InvalidEventException("tickets can only be reserved for published events, current status is: " + event.getStatus());
         }
 
         ticketType.reserve(quantity);

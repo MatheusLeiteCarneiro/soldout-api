@@ -51,6 +51,8 @@ class TicketTypeConcurrencyIT {
         event.addTicketType("Last one", "The only ticket left",
                 new BigDecimal("100.00"), AVAILABLE_TICKETS);
 
+        event.publish();
+
         eventRepository.save(event);
 
         ticketTypeId = event.getTicketTypes().iterator().next().getId();

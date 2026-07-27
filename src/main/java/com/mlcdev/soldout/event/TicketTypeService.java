@@ -1,5 +1,6 @@
 package com.mlcdev.soldout.event;
 
+import com.mlcdev.soldout.event.exceptions.InvalidEventException;
 import com.mlcdev.soldout.event.exceptions.TicketTypeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,13 @@ public class TicketTypeService {
 
     @Transactional
     public void reserve(UUID ticketTypeId, int quantity){
-        TicketType ticketType = ticketTypeRepository.findByIdWithEvent(ticketTypeId)
+        TicketType ticketType = ticketTypeRepository.findByIdWithEventForUpdate(ticketTypeId)
                 .orElseThrow(() -> new TicketTypeNotFoundException(ticketTypeId));
+
+        Event event = ticketType.getEvent();
+        if(!event.isPublished()){
+            throw new InvalidEventException("cannot reserve tickets for events with status: " + event.getStatus() + " reservations only for published events");
+        }
 
         ticketType.reserve(quantity);
     }

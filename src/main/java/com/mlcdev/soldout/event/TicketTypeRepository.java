@@ -1,6 +1,8 @@
 package com.mlcdev.soldout.event;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,4 +16,8 @@ interface TicketTypeRepository extends JpaRepository<TicketType, UUID> {
 
     @Query("SELECT tt FROM TicketType tt JOIN FETCH tt.event WHERE tt.id = :uuid")
     Optional<TicketType> findByIdWithEvent(@Param("uuid") UUID uuid);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT tt FROM TicketType tt JOIN FETCH tt.event WHERE tt.id = :uuid")
+    Optional<TicketType> findByIdWithEventForUpdate(@Param("uuid") UUID uuid);
 }

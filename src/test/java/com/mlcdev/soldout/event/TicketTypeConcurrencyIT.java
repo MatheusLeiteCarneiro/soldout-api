@@ -1,6 +1,7 @@
 package com.mlcdev.soldout.event;
 
 import com.mlcdev.soldout.TestcontainersConfiguration;
+import com.mlcdev.soldout.event.exceptions.NotEnoughTicketsException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -111,6 +112,8 @@ class TicketTypeConcurrencyIT {
         assertThat(result.getAvailableQuantity())
                 .as("stock must never go below zero")
                 .isZero();
+        assertThat(failures).allSatisfy(
+                e -> assertThat(e).isInstanceOf(NotEnoughTicketsException.class));
     }
 
     private void printFailureSummary(ConcurrentLinkedQueue<Exception> failures) {

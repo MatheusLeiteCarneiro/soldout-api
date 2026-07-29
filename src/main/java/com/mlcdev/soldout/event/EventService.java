@@ -1,9 +1,9 @@
 package com.mlcdev.soldout.event;
 
-import com.mlcdev.soldout.event.dtos.EventDetailDTO;
-import com.mlcdev.soldout.event.dtos.EventInsertDTO;
-import com.mlcdev.soldout.event.dtos.EventSummaryDTO;
-import com.mlcdev.soldout.event.exceptions.EventNotFoundException;
+import com.mlcdev.soldout.event.dto.EventDetailDTO;
+import com.mlcdev.soldout.event.dto.EventInsertDTO;
+import com.mlcdev.soldout.event.dto.EventSummaryDTO;
+import com.mlcdev.soldout.event.exception.EventNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

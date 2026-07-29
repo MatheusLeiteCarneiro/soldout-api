@@ -1,7 +1,7 @@
 package com.mlcdev.soldout.event;
 
 import com.mlcdev.soldout.TestcontainersConfiguration;
-import com.mlcdev.soldout.event.exceptions.NotEnoughTicketsException;
+import com.mlcdev.soldout.event.exception.NotEnoughTicketsException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

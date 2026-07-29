@@ -1,4 +1,4 @@
-package com.mlcdev.soldout.event.dtos;
+package com.mlcdev.soldout.event.dto;
 
 import java.time.Instant;
 import java.util.UUID;

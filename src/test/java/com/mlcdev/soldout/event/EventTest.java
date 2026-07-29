@@ -1,6 +1,6 @@
 package com.mlcdev.soldout.event;
 
-import com.mlcdev.soldout.event.exceptions.InvalidEventException;
+import com.mlcdev.soldout.event.exception.InvalidEventException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

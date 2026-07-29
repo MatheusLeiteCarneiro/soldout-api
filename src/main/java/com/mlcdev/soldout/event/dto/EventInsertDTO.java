@@ -1,4 +1,4 @@
-package com.mlcdev.soldout.event.dtos;
+package com.mlcdev.soldout.event.dto;
 
 import com.mlcdev.soldout.event.validation.EventPeriod;
 import com.mlcdev.soldout.event.validation.ValidEventPeriod;

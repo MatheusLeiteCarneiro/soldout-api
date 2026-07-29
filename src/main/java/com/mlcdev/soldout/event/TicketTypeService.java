@@ -1,7 +1,7 @@
 package com.mlcdev.soldout.event;
 
-import com.mlcdev.soldout.event.exceptions.InvalidEventException;
-import com.mlcdev.soldout.event.exceptions.TicketTypeNotFoundException;
+import com.mlcdev.soldout.event.exception.InvalidEventException;
+import com.mlcdev.soldout.event.exception.TicketTypeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

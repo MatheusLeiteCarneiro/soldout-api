@@ -1,4 +1,4 @@
-package com.mlcdev.soldout.event.exceptions;
+package com.mlcdev.soldout.event.exception;
 
 public class InvalidEventException extends RuntimeException {
     public InvalidEventException(String message) {

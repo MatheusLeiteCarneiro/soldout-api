@@ -1,8 +1,8 @@
 package com.mlcdev.soldout.event;
 
-import com.mlcdev.soldout.event.dtos.EventDetailDTO;
-import com.mlcdev.soldout.event.dtos.EventInsertDTO;
-import com.mlcdev.soldout.event.dtos.EventSummaryDTO;
+import com.mlcdev.soldout.event.dto.EventDetailDTO;
+import com.mlcdev.soldout.event.dto.EventInsertDTO;
+import com.mlcdev.soldout.event.dto.EventSummaryDTO;
 import org.mapstruct.Mapper;
 
 

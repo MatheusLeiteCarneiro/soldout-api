@@ -1,4 +1,4 @@
-package com.mlcdev.soldout.event.dtos;
+package com.mlcdev.soldout.event.dto;
 
 import java.math.BigDecimal;
 import java.util.UUID;

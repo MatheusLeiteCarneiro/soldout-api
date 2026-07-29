@@ -1,8 +1,8 @@
 package com.mlcdev.soldout.event;
 
-import com.mlcdev.soldout.event.exceptions.InvalidTicketTypeException;
-import com.mlcdev.soldout.event.exceptions.InventoryInconsistencyException;
-import com.mlcdev.soldout.event.exceptions.NotEnoughTicketsException;
+import com.mlcdev.soldout.event.exception.InvalidTicketTypeException;
+import com.mlcdev.soldout.event.exception.InventoryInconsistencyException;
+import com.mlcdev.soldout.event.exception.NotEnoughTicketsException;
 import com.mlcdev.soldout.shared.persistence.BaseEntity;
 import com.mlcdev.soldout.shared.utils.IdGenerator;
 import jakarta.persistence.Column;

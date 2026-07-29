@@ -1,4 +1,4 @@
-package com.mlcdev.soldout.shared.exceptions;
+package com.mlcdev.soldout.shared.exception;
 
 import lombok.Getter;
 

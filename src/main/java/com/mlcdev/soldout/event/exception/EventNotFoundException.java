@@ -1,6 +1,6 @@
 package com.mlcdev.soldout.event.exception;
 
-import com.mlcdev.soldout.shared.exceptions.ResourceNotFoundException;
+import com.mlcdev.soldout.shared.exception.ResourceNotFoundException;
 
 import java.util.UUID;
 

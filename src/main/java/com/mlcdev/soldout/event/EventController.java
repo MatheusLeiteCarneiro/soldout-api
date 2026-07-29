@@ -1,16 +1,22 @@
 package com.mlcdev.soldout.event;
 
 import com.mlcdev.soldout.event.dtos.EventDetailDTO;
+import com.mlcdev.soldout.event.dtos.EventInsertDTO;
 import com.mlcdev.soldout.event.dtos.EventSummaryDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -28,6 +34,18 @@ public class EventController {
     @GetMapping("/{eventId}")
     public ResponseEntity<EventDetailDTO> findById(@PathVariable("eventId") UUID id){
         return ResponseEntity.ok(service.findById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<EventDetailDTO> insert(@RequestBody @Valid EventInsertDTO insertDTO){
+        EventDetailDTO saved = service.insert(insertDTO);
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(saved.id())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(saved);
     }
 
 }

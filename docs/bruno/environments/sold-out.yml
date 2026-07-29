@@ -1,0 +1,6 @@
+name: sold-out
+variables:
+  - name: host
+    value: http://localhost:8080
+  - name: eventId
+    value: 019faf2e-c2fb-756b-9175-0cdd597e8847

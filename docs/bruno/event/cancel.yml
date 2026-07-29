@@ -1,0 +1,15 @@
+info:
+  name: cancel
+  type: http
+  seq: 5
+
+http:
+  method: PATCH
+  url: "{{host}}/events/cancel/019fae8b-ca5f-7e46-9571-302908026304"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

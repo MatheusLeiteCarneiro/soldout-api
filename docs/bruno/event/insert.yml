@@ -1,0 +1,29 @@
+info:
+  name: insert
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{host}}/events"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Event Name",
+        "description": "Event Description",
+        "startsAt": "2026-10-28T16:00:00Z",
+        "endsAt": "2026-10-30T16:00:00Z"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: bru.setEnvVar("eventId", res.body.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

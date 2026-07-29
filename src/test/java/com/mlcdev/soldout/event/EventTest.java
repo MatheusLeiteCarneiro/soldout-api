@@ -38,6 +38,7 @@ class EventTest {
 
     private Event publishedEvent() {
         Event event = draftEvent();
+        event.addTicketType("Student", "Student ticket", TICKET_PRICE, 200);
         event.publish();
         return event;
     }
@@ -133,11 +134,23 @@ class EventTest {
         @Test
         void shouldPublishDraftEvent() {
             Event event = draftEvent();
+            event.addTicketType("Student", "Student ticket", TICKET_PRICE, 200);
 
             event.publish();
 
             assertThat(event.getStatus()).isEqualTo(EventStatus.PUBLISHED);
             assertThat(event.isPublished()).isTrue();
+        }
+
+        @Test
+        void shouldRejectPublishingEventWithoutTicketTypes() {
+            Event event = draftEvent();
+
+            assertThatThrownBy(event::publish)
+                    .isInstanceOf(InvalidEventException.class)
+                    .hasMessageContaining("without ticket types");
+
+            assertThat(event.getStatus()).isEqualTo(EventStatus.DRAFT);
         }
 
         @Test

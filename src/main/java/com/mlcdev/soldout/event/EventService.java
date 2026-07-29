@@ -1,5 +1,6 @@
 package com.mlcdev.soldout.event;
 
+import com.mlcdev.soldout.event.dtos.EventDetailDTO;
 import com.mlcdev.soldout.event.dtos.EventSummaryDTO;
 import com.mlcdev.soldout.event.exceptions.EventNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,4 +24,10 @@ public class EventService {
         return eventRepository.findAllAvailable(pageable).map(eventMapper::eventToEventSummaryDTO);
     }
 
+    @Transactional(readOnly = true)
+    public EventDetailDTO findById(UUID eventId){
+        Event event = eventRepository.findByIdWithTicketTypes(eventId)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
+        return eventMapper.eventToEventDetailDTO(event);
+    }
 }

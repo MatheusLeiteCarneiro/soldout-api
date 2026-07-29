@@ -1,7 +1,7 @@
 # 5. Reserve does not check event status
 
 Date: 2026-07-24
-Status: Proposed
+Status: Accepted
 
 ## Context
 Define where the event status must be validated before reserving tickets.

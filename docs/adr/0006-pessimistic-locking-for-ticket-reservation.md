@@ -1,7 +1,7 @@
 # 6. Pessimistic locking for ticket reservation
 
 Date: 2026-07-27
-Status: Proposed
+Status: Accepted
 
 ## Context
 The concurrency test proved that `TicketType.reserve()` alone does not

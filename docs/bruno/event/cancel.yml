@@ -4,8 +4,8 @@ info:
   seq: 5
 
 http:
-  method: PATCH
-  url: "{{host}}/events/cancel/019fae8b-ca5f-7e46-9571-302908026304"
+  method: POST
+  url: "{{host}}/events/{{eventId}}/cancel"
   auth: inherit
 
 settings:

@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,8 +32,8 @@ public class EventController {
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventDetailDTO> findById(@PathVariable("eventId") UUID id){
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<EventDetailDTO> findById(@PathVariable("eventId") UUID eventId){
+        return ResponseEntity.ok(service.findById(eventId));
     }
 
     @PostMapping
@@ -49,14 +48,14 @@ public class EventController {
         return ResponseEntity.created(uri).body(saved);
     }
 
-    @PatchMapping("/publish/{eventId}")
-    public ResponseEntity<EventDetailDTO> publish(@PathVariable("eventId") UUID id){
-        return ResponseEntity.ok(service.publish(id));
+    @PostMapping("/{eventId}/publish")
+    public ResponseEntity<EventDetailDTO> publish(@PathVariable("eventId") UUID eventId){
+        return ResponseEntity.ok(service.publish(eventId));
     }
 
-    @PatchMapping("/cancel/{eventId}")
-    public ResponseEntity<EventDetailDTO> cancel(@PathVariable("eventId") UUID id){
-        return ResponseEntity.ok(service.cancel(id));
+    @PostMapping("/{eventId}/cancel")
+    public ResponseEntity<EventDetailDTO> cancel(@PathVariable("eventId") UUID eventId){
+        return ResponseEntity.ok(service.cancel(eventId));
     }
 
 }

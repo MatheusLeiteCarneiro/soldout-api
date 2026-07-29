@@ -4,8 +4,8 @@ info:
   seq: 4
 
 http:
-  method: PATCH
-  url: "{{host}}/events/publish/{{eventId}}"
+  method: POST
+  url: "{{host}}/events/{{eventId}}/publish"
   auth: inherit
 
 settings:

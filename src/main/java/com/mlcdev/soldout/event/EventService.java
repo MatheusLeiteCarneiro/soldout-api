@@ -48,4 +48,13 @@ public class EventService {
         event.publish();
         return eventMapper.eventToEventDetailDTO(event);
     }
+
+    @Transactional
+    public EventDetailDTO cancel(UUID eventId) {
+        Event event = eventRepository
+                .findByIdWithTicketTypes(eventId)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
+        event.cancel();
+        return eventMapper.eventToEventDetailDTO(event);
+    }
 }

@@ -54,4 +54,9 @@ public class EventController {
         return ResponseEntity.ok(service.publish(id));
     }
 
+    @PatchMapping("/cancel/{eventId}")
+    public ResponseEntity<EventDetailDTO> cancel(@PathVariable("eventId") UUID id){
+        return ResponseEntity.ok(service.cancel(id));
+    }
+
 }

@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -127,7 +128,7 @@ public class Event extends BaseEntity {
     public void removeTicketType(@NonNull UUID ticketTypeId) {
         ensureEventAvailable();
         TicketType found = ticketTypes.stream()
-                .filter(t -> t.getId().equals(ticketTypeId))
+                .filter(t -> Objects.equals(t.getId(), ticketTypeId))
                 .findFirst()
                 .orElseThrow(() -> new TicketTypeNotFoundException(ticketTypeId));
         if (found.getAvailableQuantity() != found.getTotalQuantity()) {

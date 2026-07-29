@@ -32,6 +32,11 @@ identifier, and v7 would leak the issue time along with it.
 - External dependency until the JDK ships v7
 - 16 bytes instead of 8
 - The id tells you when the row was created
+- Spring Data's `isNew()` checks whether the id is null. With an
+  assigned id it always returns false, so `save()` runs `merge()` and
+  fires a SELECT before every INSERT. Fixed with a `@MappedSuperclass`
+  implementing `Persistable` and flipping a transient flag on
+  `@PostPersist` / `@PostLoad`.
 
 ## Alternatives
 BIGSERIAL — smallest and fastest, but leaks how many records exist

@@ -93,6 +93,11 @@ public class Event extends BaseEntity {
             throw new InvalidEventException(
                     "only draft events can be published, current status is " + status);
         }
+        if(ticketTypes.isEmpty()){
+            throw new InvalidEventException(
+                    "events without ticket types can't be published"
+            );
+        }
         this.status = EventStatus.PUBLISHED;
     }
 

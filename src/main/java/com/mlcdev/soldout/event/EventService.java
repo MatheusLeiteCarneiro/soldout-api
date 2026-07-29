@@ -32,11 +32,20 @@ public class EventService {
         return eventMapper.eventToEventDetailDTO(event);
     }
 
-
     @Transactional
     public EventDetailDTO insert(EventInsertDTO insertDTO){
         Event event = eventMapper.eventInsertDTOtoEvent(insertDTO);
         Event saved = eventRepository.save(event);
         return eventMapper.eventToEventDetailDTO(saved);
+    }
+
+
+    @Transactional
+    public EventDetailDTO publish(UUID eventId){
+        Event event = eventRepository
+                .findByIdWithTicketTypes(eventId)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
+        event.publish();
+        return eventMapper.eventToEventDetailDTO(event);
     }
 }

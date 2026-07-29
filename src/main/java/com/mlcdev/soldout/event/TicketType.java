@@ -3,6 +3,7 @@ package com.mlcdev.soldout.event;
 import com.mlcdev.soldout.event.exceptions.InvalidTicketTypeException;
 import com.mlcdev.soldout.event.exceptions.InventoryInconsistencyException;
 import com.mlcdev.soldout.event.exceptions.NotEnoughTicketsException;
+import com.mlcdev.soldout.shared.persistence.BaseEntity;
 import com.mlcdev.soldout.shared.utils.IdGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,10 +23,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "ticket_types")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TicketType {
+public class TicketType extends BaseEntity {
 
     @Id
     @EqualsAndHashCode.Include

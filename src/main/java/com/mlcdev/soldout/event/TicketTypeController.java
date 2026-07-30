@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -36,7 +37,7 @@ public class TicketTypeController {
     @PostMapping("/events/{eventId}/ticket-types")
     public ResponseEntity<TicketTypeDTO> insert(@PathVariable("eventId") UUID eventId, @RequestBody @Valid TicketTypeInsertDTO insertDTO){
         TicketTypeDTO created = ticketTypeService.insert(eventId, insertDTO);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{ticketTypeId}").buildAndExpand(created.id()).toUri();
+        URI uri = MvcUriComponentsBuilder.fromMethodCall(MvcUriComponentsBuilder.on(TicketTypeController.class).findById(created.id())).build().toUri();
         return ResponseEntity.created(uri).body(created);
     }
 

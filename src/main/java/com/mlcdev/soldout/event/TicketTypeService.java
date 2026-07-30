@@ -1,6 +1,8 @@
 package com.mlcdev.soldout.event;
 
 import com.mlcdev.soldout.event.dto.TicketTypeDTO;
+import com.mlcdev.soldout.event.dto.TicketTypeInsertDTO;
+import com.mlcdev.soldout.event.exception.EventNotFoundException;
 import com.mlcdev.soldout.event.exception.InvalidEventException;
 import com.mlcdev.soldout.event.exception.TicketTypeNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.UUID;
 public class TicketTypeService {
 
     private final TicketTypeRepository ticketTypeRepository;
+    private final EventRepository eventRepository;
     private final TicketTypeMapper ticketTypeMapper;
 
     @Transactional(readOnly = true)
@@ -26,6 +29,14 @@ public class TicketTypeService {
     @Transactional(readOnly = true)
     public TicketTypeDTO findById(UUID ticketTypeId) {
         TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(() -> new TicketTypeNotFoundException(ticketTypeId));
+        return ticketTypeMapper.ticketTypeToTicketTypeDTO(ticketType);
+    }
+
+    @Transactional
+    public TicketTypeDTO insert(UUID eventId, TicketTypeInsertDTO insertDTO){
+        Event event = eventRepository.findByIdWithTicketTypes(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+        TicketType ticketType = event.addTicketType(insertDTO.name(), insertDTO.description(), insertDTO.price(), insertDTO.totalQuantity());
+        eventRepository.save(event);
         return ticketTypeMapper.ticketTypeToTicketTypeDTO(ticketType);
     }
 

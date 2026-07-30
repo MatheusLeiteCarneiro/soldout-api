@@ -130,9 +130,11 @@ public class Event extends BaseEntity {
         this.status = EventStatus.DRAFT;
     }
 
-    public void addTicketType(@NonNull String ticketName, @NonNull String ticketDescription, @NonNull BigDecimal ticketPrice, int ticketTotalQuantity) {
+    public TicketType addTicketType(@NonNull String ticketName, @NonNull String ticketDescription, @NonNull BigDecimal ticketPrice, int ticketTotalQuantity) {
         ensureEventAvailable();
-        ticketTypes.add(new TicketType(ticketName, ticketDescription, ticketPrice, ticketTotalQuantity, this));
+        TicketType ticketType = new TicketType(ticketName, ticketDescription, ticketPrice, ticketTotalQuantity, this);
+        ticketTypes.add(ticketType);
+        return ticketType;
     }
 
     public void removeTicketType(@NonNull UUID ticketTypeId) {

@@ -1,11 +1,13 @@
 package com.mlcdev.soldout.event;
 
+import com.mlcdev.soldout.event.dto.TicketTypeDTO;
 import com.mlcdev.soldout.event.exception.InvalidEventException;
 import com.mlcdev.soldout.event.exception.TicketTypeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -13,6 +15,13 @@ import java.util.UUID;
 public class TicketTypeService {
 
     private final TicketTypeRepository ticketTypeRepository;
+    private final TicketTypeMapper ticketTypeMapper;
+
+    @Transactional(readOnly = true)
+    public List<TicketTypeDTO> findAllFromEvent(UUID eventId){
+       List<TicketType> ticketTypes = ticketTypeRepository.findAllByEventId(eventId);
+        return ticketTypes.stream().map(ticketTypeMapper::ticketTypeToTicketTypeDTO).toList();
+    }
 
     @Transactional
     public void reserve(UUID ticketTypeId, int quantity){

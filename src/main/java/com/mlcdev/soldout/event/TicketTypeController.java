@@ -40,9 +40,9 @@ public class TicketTypeController {
         return ResponseEntity.created(uri).body(created);
     }
 
-    @PostMapping("/ticket-types/reserve")
-    public ResponseEntity<TicketTypeDTO> reserve(@RequestBody @Valid ReserveTicketTypeDTO reserveDTO){
-        return ResponseEntity.ok(ticketTypeService.reserve(reserveDTO));
+    @PostMapping("/ticket-types/{ticketTypeId}/reserve")
+    public ResponseEntity<TicketTypeDTO> reserve(@PathVariable("ticketTypeId")UUID ticketTypeId,@RequestBody @Valid ReserveTicketTypeDTO reserveDTO){
+        return ResponseEntity.ok(ticketTypeService.reserve(ticketTypeId, reserveDTO));
     }
 
 }

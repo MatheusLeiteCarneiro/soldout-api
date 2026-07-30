@@ -80,7 +80,7 @@ class TicketTypeConcurrencyIT {
                 executor.submit(() -> {
                     try {
                         startLatch.await();
-                        ticketTypeService.reserve(new ReserveTicketTypeDTO(ticketTypeId, 1));
+                        ticketTypeService.reserve(ticketTypeId, new ReserveTicketTypeDTO(1));
                         successCount.incrementAndGet();
                     } catch (Exception e) {
                         failureCount.incrementAndGet();

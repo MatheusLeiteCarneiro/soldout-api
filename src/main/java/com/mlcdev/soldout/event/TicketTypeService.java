@@ -42,9 +42,9 @@ public class TicketTypeService {
     }
 
     @Transactional
-    public TicketTypeDTO reserve(ReserveTicketTypeDTO reserveDTO){
-        TicketType ticketType = ticketTypeRepository.findByIdWithEventForUpdate(reserveDTO.id())
-                .orElseThrow(() -> new TicketTypeNotFoundException(reserveDTO.id()));
+    public TicketTypeDTO reserve(UUID ticketTypeId, ReserveTicketTypeDTO reserveDTO){
+        TicketType ticketType = ticketTypeRepository.findByIdWithEventForUpdate(ticketTypeId)
+                .orElseThrow(() -> new TicketTypeNotFoundException(ticketTypeId));
 
         Event event = ticketType.getEvent();
         if(!event.isPublished()){

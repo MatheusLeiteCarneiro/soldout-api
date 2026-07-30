@@ -3,12 +3,14 @@ package com.mlcdev.soldout.event;
 import com.mlcdev.soldout.event.dto.EventDetailDTO;
 import com.mlcdev.soldout.event.dto.EventInsertDTO;
 import com.mlcdev.soldout.event.dto.EventSummaryDTO;
+import com.mlcdev.soldout.event.dto.EventUpdateDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,4 +60,8 @@ public class EventController {
         return ResponseEntity.ok(service.cancel(eventId));
     }
 
+    @PatchMapping("/{eventId}")
+    public ResponseEntity<EventDetailDTO> update(@PathVariable("eventId") UUID eventId, @RequestBody @Valid EventUpdateDTO dto){
+        return ResponseEntity.ok(service.update(eventId, dto));
+    }
 }

@@ -1,11 +1,11 @@
 info:
-  name: publish
+  name: restore
   type: http
-  seq: 5
+  seq: 7
 
 http:
   method: POST
-  url: "{{baseUrl}}/events/{{eventId}}/publish"
+  url: "{{baseUrl}}/events/{{eventId}}/restore"
   auth: inherit
 
 settings:

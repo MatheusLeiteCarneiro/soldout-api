@@ -120,6 +120,16 @@ public class Event extends BaseEntity {
         this.status = EventStatus.FINISHED;
     }
 
+    public void restore(){
+
+        if(status != EventStatus.CANCELLED){
+            throw new InvalidEventException(
+                    "only cancelled events can be restored, current status is " + status);
+        }
+
+        this.status = EventStatus.DRAFT;
+    }
+
     public void addTicketType(@NonNull String ticketName, @NonNull String ticketDescription, @NonNull BigDecimal ticketPrice, int ticketTotalQuantity) {
         ensureEventAvailable();
         ticketTypes.add(new TicketType(ticketName, ticketDescription, ticketPrice, ticketTotalQuantity, this));

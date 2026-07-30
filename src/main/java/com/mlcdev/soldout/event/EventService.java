@@ -61,6 +61,15 @@ public class EventService {
     }
 
     @Transactional
+    public EventDetailDTO restore(UUID eventId) {
+        Event event = eventRepository
+                .findByIdWithTicketTypes(eventId)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
+        event.restore();
+        return eventMapper.eventToEventDetailDTO(event);
+    }
+
+    @Transactional
     public EventDetailDTO update(UUID eventId, EventUpdateDTO updateDTO){
         Event event = eventRepository.findByIdWithTicketTypes(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
         applyDTOPatchToEntity(event, updateDTO);

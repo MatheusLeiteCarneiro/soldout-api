@@ -60,6 +60,11 @@ public class EventController {
         return ResponseEntity.ok(service.cancel(eventId));
     }
 
+    @PostMapping("/{eventId}/restore")
+    public ResponseEntity<EventDetailDTO> restore(@PathVariable("eventId") UUID eventId){
+        return ResponseEntity.ok(service.restore(eventId));
+    }
+
     @PatchMapping("/{eventId}")
     public ResponseEntity<EventDetailDTO> update(@PathVariable("eventId") UUID eventId, @RequestBody @Valid EventUpdateDTO dto){
         return ResponseEntity.ok(service.update(eventId, dto));

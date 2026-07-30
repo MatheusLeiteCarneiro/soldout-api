@@ -20,4 +20,9 @@ public class TicketTypeController {
     public ResponseEntity<List<TicketTypeDTO>> findAllFromEvent(@PathVariable("eventId") UUID eventId){
         return ResponseEntity.ok(ticketTypeService.findAllFromEvent(eventId));
     }
+
+    @GetMapping("/ticket-types/{ticketTypeId}")
+    public ResponseEntity<TicketTypeDTO> findById(@PathVariable("ticketTypeId") UUID ticketTypeId){
+        return ResponseEntity.ok(ticketTypeService.findById(ticketTypeId));
+    }
 }

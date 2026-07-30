@@ -23,6 +23,12 @@ public class TicketTypeService {
         return ticketTypes.stream().map(ticketTypeMapper::ticketTypeToTicketTypeDTO).toList();
     }
 
+    @Transactional(readOnly = true)
+    public TicketTypeDTO findById(UUID ticketTypeId) {
+        TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(() -> new TicketTypeNotFoundException(ticketTypeId));
+        return ticketTypeMapper.ticketTypeToTicketTypeDTO(ticketType);
+    }
+
     @Transactional
     public void reserve(UUID ticketTypeId, int quantity){
         TicketType ticketType = ticketTypeRepository.findByIdWithEventForUpdate(ticketTypeId)
@@ -35,4 +41,6 @@ public class TicketTypeService {
 
         ticketType.reserve(quantity);
     }
+
+
 }

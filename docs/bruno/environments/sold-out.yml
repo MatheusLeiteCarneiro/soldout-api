@@ -12,3 +12,6 @@ variables:
   - name: eventId
     value: 123e4567-e89b-12d3-a456-426614174000
     description: ""
+  - name: ticketTypeId
+    value: b48c4a84-b70d-4d85-b544-b8ccbde0558c
+    description: ""

@@ -215,6 +215,58 @@ class EventTest {
     }
 
     @Nested
+    @DisplayName("restore")
+    class Restore {
+
+        @Test
+        void shouldRestoreCancelledEvent() {
+            Event event = cancelledEvent();
+
+            event.restore();
+
+            assertThat(event.getStatus()).isEqualTo(EventStatus.DRAFT);
+        }
+
+        @Test
+        void shouldRejectRestorePublishedEvent() {
+            Event event = publishedEvent();
+
+            assertThatThrownBy(event::restore)
+                    .isInstanceOf(InvalidEventException.class)
+                    .hasMessageContaining("only cancelled events can be restored");
+        }
+
+        @Test
+        void shouldRejectRestoreFinishedEvent() {
+            Event event = finishedEvent();
+
+            assertThatThrownBy(event::restore)
+                    .isInstanceOf(InvalidEventException.class)
+                    .hasMessageContaining("only cancelled events can be restored");
+        }
+
+        @Test
+        void shouldRejectRestoreDraftEvent() {
+            Event event = draftEvent();
+
+            assertThatThrownBy(event::restore)
+                    .isInstanceOf(InvalidEventException.class)
+                    .hasMessageContaining("only cancelled events can be restored");
+        }
+
+        @Test
+        void shouldRejectRestoreTwice() {
+            Event event = cancelledEvent();
+
+            event.restore();
+
+            assertThatThrownBy(event::restore)
+                    .isInstanceOf(InvalidEventException.class)
+                    .hasMessageContaining("only cancelled events can be restored");
+        }
+    }
+
+    @Nested
     @DisplayName("finish")
     class Finish {
 

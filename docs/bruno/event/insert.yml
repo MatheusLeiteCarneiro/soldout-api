@@ -23,8 +23,6 @@ runtime:
       code: |-
         bru.setVar("startsAt", new Date(Date.now() + 30 * 864e5).toISOString());
         bru.setVar("endsAt", new Date(Date.now() + 32 * 864e5).toISOString());
-    - type: after-response
-      code: bru.setVar("eventId", res.body.id);
 
 settings:
   encodeUrl: true

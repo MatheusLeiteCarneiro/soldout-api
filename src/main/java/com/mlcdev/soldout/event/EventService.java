@@ -3,6 +3,7 @@ package com.mlcdev.soldout.event;
 import com.mlcdev.soldout.event.dto.EventDetailDTO;
 import com.mlcdev.soldout.event.dto.EventInsertDTO;
 import com.mlcdev.soldout.event.dto.EventSummaryDTO;
+import com.mlcdev.soldout.event.dto.EventUpdateDTO;
 import com.mlcdev.soldout.event.exception.EventNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.UUID;
 
 
@@ -57,4 +59,21 @@ public class EventService {
         event.cancel();
         return eventMapper.eventToEventDetailDTO(event);
     }
+
+    @Transactional
+    public EventDetailDTO update(UUID eventId, EventUpdateDTO updateDTO){
+        Event event = eventRepository.findByIdWithTicketTypes(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+        applyDTOPatchToEntity(event, updateDTO);
+        return eventMapper.eventToEventDetailDTO(event);
+    }
+
+    private void applyDTOPatchToEntity(Event event, EventUpdateDTO dto){
+        String newName= (dto.name() == null) ? event.getName() : dto.name();
+        String newDescription= (dto.description() == null) ? event.getDescription() : dto.description();
+        Instant newStart = (dto.startsAt() == null) ? event.getStartsAt() : dto.startsAt();
+        Instant newEnd = (dto.endsAt() == null) ? event.getEndsAt() : dto.endsAt();
+        event.updateDetails(newName, newDescription);
+        event.reschedule(newStart, newEnd);
+    }
+
 }

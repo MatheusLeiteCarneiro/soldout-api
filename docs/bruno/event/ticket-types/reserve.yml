@@ -1,0 +1,22 @@
+info:
+  name: reserve
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/ticket-types/reserve"
+  body:
+    type: json
+    data: |-
+      {
+        "id": "b48c4a84-b70d-4d85-b544-b8ccbde0558c",
+        "quantity": 1
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

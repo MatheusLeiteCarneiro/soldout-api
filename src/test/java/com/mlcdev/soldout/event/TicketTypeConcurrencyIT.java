@@ -1,6 +1,7 @@
 package com.mlcdev.soldout.event;
 
 import com.mlcdev.soldout.TestcontainersConfiguration;
+import com.mlcdev.soldout.event.dto.ReserveTicketTypeDTO;
 import com.mlcdev.soldout.event.exception.NotEnoughTicketsException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,7 +80,7 @@ class TicketTypeConcurrencyIT {
                 executor.submit(() -> {
                     try {
                         startLatch.await();
-                        ticketTypeService.reserve(ticketTypeId, 1);
+                        ticketTypeService.reserve(new ReserveTicketTypeDTO(ticketTypeId, 1));
                         successCount.incrementAndGet();
                     } catch (Exception e) {
                         failureCount.incrementAndGet();

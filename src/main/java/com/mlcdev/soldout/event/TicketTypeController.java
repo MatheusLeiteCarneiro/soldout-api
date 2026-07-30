@@ -1,5 +1,6 @@
 package com.mlcdev.soldout.event;
 
+import com.mlcdev.soldout.event.dto.ReserveTicketTypeDTO;
 import com.mlcdev.soldout.event.dto.TicketTypeDTO;
 import com.mlcdev.soldout.event.dto.TicketTypeInsertDTO;
 import jakarta.validation.Valid;
@@ -37,6 +38,11 @@ public class TicketTypeController {
         TicketTypeDTO created = ticketTypeService.insert(eventId, insertDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{ticketTypeId}").buildAndExpand(created.id()).toUri();
         return ResponseEntity.created(uri).body(created);
+    }
+
+    @PostMapping("/ticket-types/reserve")
+    public ResponseEntity<TicketTypeDTO> reserve(@RequestBody @Valid ReserveTicketTypeDTO reserveDTO){
+        return ResponseEntity.ok(ticketTypeService.reserve(reserveDTO));
     }
 
 }

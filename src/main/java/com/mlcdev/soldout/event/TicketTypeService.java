@@ -1,5 +1,6 @@
 package com.mlcdev.soldout.event;
 
+import com.mlcdev.soldout.event.dto.ReserveTicketTypeDTO;
 import com.mlcdev.soldout.event.dto.TicketTypeDTO;
 import com.mlcdev.soldout.event.dto.TicketTypeInsertDTO;
 import com.mlcdev.soldout.event.exception.EventNotFoundException;
@@ -41,16 +42,17 @@ public class TicketTypeService {
     }
 
     @Transactional
-    public void reserve(UUID ticketTypeId, int quantity){
-        TicketType ticketType = ticketTypeRepository.findByIdWithEventForUpdate(ticketTypeId)
-                .orElseThrow(() -> new TicketTypeNotFoundException(ticketTypeId));
+    public TicketTypeDTO reserve(ReserveTicketTypeDTO reserveDTO){
+        TicketType ticketType = ticketTypeRepository.findByIdWithEventForUpdate(reserveDTO.id())
+                .orElseThrow(() -> new TicketTypeNotFoundException(reserveDTO.id()));
 
         Event event = ticketType.getEvent();
         if(!event.isPublished()){
             throw new InvalidEventException("tickets can only be reserved for published events, current status is: " + event.getStatus());
         }
 
-        ticketType.reserve(quantity);
+        ticketType.reserve(reserveDTO.quantity());
+        return ticketTypeMapper.ticketTypeToTicketTypeDTO(ticketTypeRepository.save(ticketType));
     }
 
 

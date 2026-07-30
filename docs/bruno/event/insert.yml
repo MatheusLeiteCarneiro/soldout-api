@@ -5,22 +5,26 @@ info:
 
 http:
   method: POST
-  url: "{{host}}/events"
+  url: "{{baseUrl}}/events"
   body:
     type: json
     data: |-
       {
         "name": "Event Name",
         "description": "Event Description",
-        "startsAt": "2026-10-28T16:00:00Z",
-        "endsAt": "2026-10-30T16:00:00Z"
+        "startsAt": "{{startsAt}}",
+        "endsAt": "{{endsAt}}"
       }
   auth: inherit
 
 runtime:
   scripts:
+    - type: before-request
+      code: |-
+        bru.setVar("startsAt", new Date(Date.now() + 30 * 864e5).toISOString());
+        bru.setVar("endsAt", new Date(Date.now() + 32 * 864e5).toISOString());
     - type: after-response
-      code: bru.setEnvVar("eventId", res.body.id);
+      code: bru.setVar("eventId", res.body.id);
 
 settings:
   encodeUrl: true

@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: "{{host}}/events/{{eventId}}/publish"
+  url: "{{baseUrl}}/events/{{eventId}}/publish"
   auth: inherit
 
 settings:

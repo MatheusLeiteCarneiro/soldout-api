@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{host}}/events"
+  url: "{{baseUrl}}/events"
   auth: inherit
 
 settings:

@@ -7,6 +7,6 @@ import java.util.UUID;
 public class EventNotFoundException extends ResourceNotFoundException {
 
     public EventNotFoundException(UUID eventId) {
-        super("event type with id: " + eventId + " not found", eventId);
+        super("event with id: " + eventId + " not found", eventId);
     }
 }

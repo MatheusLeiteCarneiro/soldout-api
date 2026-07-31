@@ -3,6 +3,7 @@ package com.mlcdev.soldout.event;
 import com.mlcdev.soldout.event.dto.ReserveTicketTypeDTO;
 import com.mlcdev.soldout.event.dto.TicketTypeDTO;
 import com.mlcdev.soldout.event.dto.TicketTypeInsertDTO;
+import com.mlcdev.soldout.event.dto.UpdateTicketTypeDTO;
 import com.mlcdev.soldout.event.exception.EventNotFoundException;
 import com.mlcdev.soldout.event.exception.InvalidEventException;
 import com.mlcdev.soldout.event.exception.TicketTypeNotFoundException;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,5 +57,17 @@ public class TicketTypeService {
         return ticketTypeMapper.ticketTypeToTicketTypeDTO(ticketTypeRepository.save(ticketType));
     }
 
+    @Transactional
+    public TicketTypeDTO update(UUID ticketTypeId, UpdateTicketTypeDTO updateDTO) {
+        TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(() -> new TicketTypeNotFoundException(ticketTypeId));
+        applyDTOPatchToEntity(ticketType, updateDTO);
+        return ticketTypeMapper.ticketTypeToTicketTypeDTO(ticketTypeRepository.save(ticketType));
+    }
 
+    private void applyDTOPatchToEntity(TicketType ticketType, UpdateTicketTypeDTO dto){
+        String newName = (dto.name() == null) ? ticketType.getName() : dto.name();
+        String newDescription = (dto.description() == null) ? ticketType.getDescription() : dto.description();
+        BigDecimal newPrice = (dto.price() == null) ? ticketType.getPrice() : dto.price();
+        ticketType.updateDetails(newName, newDescription, newPrice);
+    }
 }

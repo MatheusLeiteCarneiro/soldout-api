@@ -3,10 +3,12 @@ package com.mlcdev.soldout.event;
 import com.mlcdev.soldout.event.dto.ReserveTicketTypeDTO;
 import com.mlcdev.soldout.event.dto.TicketTypeDTO;
 import com.mlcdev.soldout.event.dto.TicketTypeInsertDTO;
+import com.mlcdev.soldout.event.dto.UpdateTicketTypeDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +46,12 @@ public class TicketTypeController {
     @PostMapping("/ticket-types/{ticketTypeId}/reserve")
     public ResponseEntity<TicketTypeDTO> reserve(@PathVariable("ticketTypeId")UUID ticketTypeId,@RequestBody @Valid ReserveTicketTypeDTO reserveDTO){
         return ResponseEntity.ok(ticketTypeService.reserve(ticketTypeId, reserveDTO));
+    }
+
+    @PatchMapping("/ticket-types/{ticketTypeId}")
+    public ResponseEntity<TicketTypeDTO> update(@PathVariable("ticketTypeId")UUID ticketTypeId,
+                                                @RequestBody @Valid UpdateTicketTypeDTO updateDTO){
+        return ResponseEntity.ok(ticketTypeService.update(ticketTypeId, updateDTO));
     }
 
 }

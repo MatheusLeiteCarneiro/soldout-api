@@ -1,0 +1,23 @@
+info:
+  name: update
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{baseUrl}}/ticket-types/{{ticketTypeId}}"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Updated ticket type name",
+        "description": "Updated ticket type description",
+        "price": 100.0
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -14,6 +14,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -60,6 +61,9 @@ public class Event extends BaseEntity {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter(AccessLevel.NONE)
     private Set<TicketType> ticketTypes = new HashSet<>();
+
+    @Version
+    private Long version;
 
     public Event(@NonNull String name,
                  @NonNull String description,

@@ -197,8 +197,8 @@
                 <configuration>
                     <excludes>
                         <exclude>com/mlcdev/soldout/SoldOutApplication.class</exclude>
-                        <exclude>com/mlcdev/soldout/**/exceptions/**</exclude>
-                        <exclude>com/mlcdev/soldout/shared/IdGenerator.class</exclude>
+                        <exclude>com/mlcdev/soldout/**/exception/**</exclude>
+                        <exclude>com/mlcdev/soldout/shared/utils/IdGenerator.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>

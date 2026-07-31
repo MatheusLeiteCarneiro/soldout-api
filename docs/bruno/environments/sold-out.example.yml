@@ -1,0 +1,17 @@
+name: sold-out (example)
+variables:
+  - name: host
+    value: http://localhost:8080
+    description: Where the app is listening. Change the port if 8080 is taken.
+  - name: version
+    value: v1
+    description: API prefix, configured in WebConfig.
+  - name: baseUrl
+    value: "{{host}}/{{version}}"
+    description: Built from host and version. Every request in the collection uses it.
+  - name: eventId
+    value: 00000000-0000-0000-0000-000000000000
+    description: An existing event. Copy an id from GET {{baseUrl}}/events.
+  - name: ticketTypeId
+    value: 00000000-0000-0000-0000-000000000000
+    description: An existing ticket type. Copy an id from GET {{baseUrl}}/events/{{eventId}}/ticket-types.

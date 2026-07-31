@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -58,6 +59,12 @@ public class TicketType extends BaseEntity {
         this.event = event;
     }
 
+    public void updateDetails(@NonNull String name, @NonNull String description, @NonNull BigDecimal price){
+        validateNonNegativePrice(price);
+        this.name = name.trim();
+        this.description = description.trim();
+        this.price = price;
+    }
 
     public void reserve(int quantity) {
         validateQuantityAboveZero(quantity);

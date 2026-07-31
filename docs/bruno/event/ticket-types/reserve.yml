@@ -5,12 +5,11 @@ info:
 
 http:
   method: POST
-  url: "{{baseUrl}}/ticket-types/reserve"
+  url: "{{baseUrl}}/ticket-types/{{ticketTypeId}}/reserve"
   body:
     type: json
     data: |-
       {
-        "id": "b48c4a84-b70d-4d85-b544-b8ccbde0558c",
         "quantity": 1
       }
   auth: inherit

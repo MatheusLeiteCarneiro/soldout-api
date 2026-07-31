@@ -76,13 +76,13 @@ public class Event extends BaseEntity {
     }
 
     public void updateDetails(@NonNull String name, @NonNull String description) {
-        ensureEventAvailable();
+        ensureModifiable();
         this.name = name.trim();
         this.description = description.trim();
     }
 
     public void reschedule(@NonNull Instant startsAt, @NonNull Instant endsAt) {
-        ensureEventAvailable();
+        ensureModifiable();
         validatePeriod(startsAt, endsAt);
 
         this.startsAt = startsAt;
@@ -94,7 +94,7 @@ public class Event extends BaseEntity {
             throw new InvalidEventException(
                     "only draft events can be published, current status is " + status);
         }
-        if(ticketTypes.isEmpty()){
+        if (ticketTypes.isEmpty()) {
             throw new InvalidEventException(
                     "events without ticket types can't be published"
             );
@@ -120,9 +120,9 @@ public class Event extends BaseEntity {
         this.status = EventStatus.FINISHED;
     }
 
-    public void restore(){
+    public void restore() {
 
-        if(status != EventStatus.CANCELLED){
+        if (status != EventStatus.CANCELLED) {
             throw new InvalidEventException(
                     "only cancelled events can be restored, current status is " + status);
         }
@@ -131,14 +131,14 @@ public class Event extends BaseEntity {
     }
 
     public TicketType addTicketType(@NonNull String ticketName, @NonNull String ticketDescription, @NonNull BigDecimal ticketPrice, int ticketTotalQuantity) {
-        ensureEventAvailable();
+        ensureModifiable();
         TicketType ticketType = new TicketType(ticketName, ticketDescription, ticketPrice, ticketTotalQuantity, this);
         ticketTypes.add(ticketType);
         return ticketType;
     }
 
     public void removeTicketType(@NonNull UUID ticketTypeId) {
-        ensureEventAvailable();
+        ensureModifiable();
         TicketType found = ticketTypes.stream()
                 .filter(t -> Objects.equals(t.getId(), ticketTypeId))
                 .findFirst()
@@ -154,6 +154,11 @@ public class Event extends BaseEntity {
         return status == EventStatus.PUBLISHED;
     }
 
+    public void ensureModifiable() {
+        if (status == EventStatus.FINISHED || status == EventStatus.CANCELLED) {
+            throw new InvalidEventException("cannot modify an event with status " + status);
+        }
+    }
 
     public Set<TicketType> getTicketTypes() {
         return Collections.unmodifiableSet(ticketTypes);
@@ -162,12 +167,6 @@ public class Event extends BaseEntity {
     private void validatePeriod(Instant startsAt, Instant endsAt) {
         if (!endsAt.isAfter(startsAt)) {
             throw new InvalidEventException("endsAt must be after startsAt");
-        }
-    }
-
-    private void ensureEventAvailable() {
-        if (status == EventStatus.FINISHED || status == EventStatus.CANCELLED) {
-            throw new InvalidEventException("cannot modify an event with status " + status);
         }
     }
 

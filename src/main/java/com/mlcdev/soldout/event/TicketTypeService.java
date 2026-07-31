@@ -58,16 +58,17 @@ public class TicketTypeService {
     }
 
     @Transactional
-    public TicketTypeDTO update(UUID ticketTypeId, UpdateTicketTypeDTO updateDTO) {
-        TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(() -> new TicketTypeNotFoundException(ticketTypeId));
-        applyDTOPatchToEntity(ticketType, updateDTO);
-        return ticketTypeMapper.ticketTypeToTicketTypeDTO(ticketTypeRepository.save(ticketType));
-    }
+    public TicketTypeDTO update(UUID ticketTypeId, UpdateTicketTypeDTO dto) {
+        TicketType ticketType = ticketTypeRepository.findByIdWithEvent(ticketTypeId)
+                .orElseThrow(() -> new TicketTypeNotFoundException(ticketTypeId));
 
-    private void applyDTOPatchToEntity(TicketType ticketType, UpdateTicketTypeDTO dto){
+        ticketType.getEvent().ensureModifiable();
+
         String newName = (dto.name() == null) ? ticketType.getName() : dto.name();
         String newDescription = (dto.description() == null) ? ticketType.getDescription() : dto.description();
         BigDecimal newPrice = (dto.price() == null) ? ticketType.getPrice() : dto.price();
         ticketType.updateDetails(newName, newDescription, newPrice);
+
+        return ticketTypeMapper.ticketTypeToTicketTypeDTO(ticketType);
     }
 }

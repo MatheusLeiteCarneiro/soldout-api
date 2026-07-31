@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,6 +52,9 @@ public class TicketTypeService {
         Event event = ticketType.getEvent();
         if(!event.isPublished()){
             throw new InvalidEventException("tickets can only be reserved for published events, current status is: " + event.getStatus());
+        }
+        if(!event.getEndsAt().isAfter(Instant.now())){
+            throw new InvalidEventException("tickets cannot be reserved for an event that has already ended");
         }
 
         ticketType.reserve(reserveDTO.quantity());

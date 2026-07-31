@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,7 +30,7 @@ public class EventController {
     private final EventService service;
 
     @GetMapping
-    public ResponseEntity<Page<EventSummaryDTO>> findAllAvailable(Pageable pageable){
+    public ResponseEntity<Page<EventSummaryDTO>> findAllAvailable(@PageableDefault(sort = {"startsAt", "id"}) Pageable pageable){
         return ResponseEntity.ok(service.findAllAvailable(pageable));
     }
 

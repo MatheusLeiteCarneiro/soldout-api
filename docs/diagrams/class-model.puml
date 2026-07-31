@@ -11,6 +11,7 @@ together {
     Instant startsAt
     Instant endsAt
     EventStatus status
+    Long version
   }
   enum EventStatus {
     DRAFT
@@ -76,6 +77,13 @@ User "1 buyer" --> "0..* orders" Order
 Order "1 order" *-- "1..* items" OrderItem
 OrderItem "1 orderItem" --> "1..* tickets" Ticket
 OrderItem "0..* items" --> "1 ticketType" TicketType
+
+note top of Event
+  version holds an optimistic lock, so the scheduled
+  finish job and the user never overwrite each
+  other; the losing write retries on the next run.
+end note
+
 note bottom of TicketType
   Stock is read with a pessimistic write lock
   during reservation, so concurrent buyers are

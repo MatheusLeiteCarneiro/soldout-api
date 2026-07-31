@@ -155,8 +155,14 @@ public class Event extends BaseEntity {
 
     }
 
-    public boolean isPublished() {
-        return status == EventStatus.PUBLISHED;
+    public void ensureOpenForReservation() {
+        if (status != EventStatus.PUBLISHED) {
+            throw new InvalidEventException(
+                    "tickets can only be reserved for published events, current status is " + status);
+        }
+        if (!endsAt.isAfter(Instant.now())) {
+            throw new InvalidEventException("tickets cannot be reserved for an event that has already ended");
+        }
     }
 
     public void ensureModifiable() {

@@ -5,14 +5,12 @@ import com.mlcdev.soldout.event.dto.TicketTypeDTO;
 import com.mlcdev.soldout.event.dto.TicketTypeInsertDTO;
 import com.mlcdev.soldout.event.dto.UpdateTicketTypeDTO;
 import com.mlcdev.soldout.event.exception.EventNotFoundException;
-import com.mlcdev.soldout.event.exception.InvalidEventException;
 import com.mlcdev.soldout.event.exception.TicketTypeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,13 +47,7 @@ public class TicketTypeService {
         TicketType ticketType = ticketTypeRepository.findByIdWithEventForUpdate(ticketTypeId)
                 .orElseThrow(() -> new TicketTypeNotFoundException(ticketTypeId));
 
-        Event event = ticketType.getEvent();
-        if(!event.isPublished()){
-            throw new InvalidEventException("tickets can only be reserved for published events, current status is: " + event.getStatus());
-        }
-        if(!event.getEndsAt().isAfter(Instant.now())){
-            throw new InvalidEventException("tickets cannot be reserved for an event that has already ended");
-        }
+        ticketType.getEvent().ensureOpenForReservation();
 
         ticketType.reserve(reserveDTO.quantity());
         return ticketTypeMapper.ticketTypeToTicketTypeDTO(ticketTypeRepository.save(ticketType));

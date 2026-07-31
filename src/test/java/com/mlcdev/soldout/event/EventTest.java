@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class EventTest {
@@ -139,7 +140,6 @@ class EventTest {
             event.publish();
 
             assertThat(event.getStatus()).isEqualTo(EventStatus.PUBLISHED);
-            assertThat(event.isPublished()).isTrue();
         }
 
         @Test
@@ -192,7 +192,6 @@ class EventTest {
             event.cancel();
 
             assertThat(event.getStatus()).isEqualTo(EventStatus.CANCELLED);
-            assertThat(event.isPublished()).isFalse();
         }
 
         @Test
@@ -295,6 +294,60 @@ class EventTest {
             assertThatThrownBy(event::finish)
                     .isInstanceOf(InvalidEventException.class)
                     .hasMessageContaining("only published events can be finished");
+        }
+    }
+
+    @Nested
+    @DisplayName("ensureOpenForReservation")
+    class EnsureOpenForReservation {
+
+        private Event endedPublishedEvent() {
+            Event event = publishedEvent();
+            event.reschedule(Instant.now().minus(ONE_DAY.multipliedBy(2)), Instant.now().minus(ONE_DAY));
+            return event;
+        }
+
+        @Test
+        void shouldAcceptPublishedEventThatHasNotEnded() {
+            Event event = publishedEvent();
+
+            assertThatCode(event::ensureOpenForReservation).doesNotThrowAnyException();
+        }
+
+        @Test
+        void shouldRejectDraftEvent() {
+            Event event = draftEvent();
+
+            assertThatThrownBy(event::ensureOpenForReservation)
+                    .isInstanceOf(InvalidEventException.class)
+                    .hasMessageContaining("only be reserved for published events");
+        }
+
+        @Test
+        void shouldRejectCancelledEvent() {
+            Event event = cancelledEvent();
+
+            assertThatThrownBy(event::ensureOpenForReservation)
+                    .isInstanceOf(InvalidEventException.class)
+                    .hasMessageContaining("only be reserved for published events");
+        }
+
+        @Test
+        void shouldRejectFinishedEvent() {
+            Event event = finishedEvent();
+
+            assertThatThrownBy(event::ensureOpenForReservation)
+                    .isInstanceOf(InvalidEventException.class)
+                    .hasMessageContaining("only be reserved for published events");
+        }
+
+        @Test
+        void shouldRejectPublishedEventThatAlreadyEnded() {
+            Event event = endedPublishedEvent();
+
+            assertThatThrownBy(event::ensureOpenForReservation)
+                    .isInstanceOf(InvalidEventException.class)
+                    .hasMessageContaining("already ended");
         }
     }
 

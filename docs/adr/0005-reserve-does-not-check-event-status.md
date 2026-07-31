@@ -24,8 +24,8 @@ even if this contradicts the ADR 0002 decision to make the entities
 responsible for their own validations.
 
 - The service loads TicketType with its Event in a single JOIN FETCH.
-- In the Event entity, the method `isPublished()` was created to verify
-  if the event is published.
+- In the Event entity, `ensureOpenForReservation()` owns the rule and its
+  messages; the service only decides when to call it.
 - `reserve()` only validates what it owns: positive quantity and
   sufficient stock.
 
@@ -54,7 +54,27 @@ price.
 The hot path argument above does not apply here. `update` is not
 contended; what is being avoided is loading N rows to modify one.
 
-One difference worth keeping: `ensureModifiable()` is public on Event and
-owns both the rule and the message, so the service invokes it instead of
-reimplementing it. `isPublished()` is only a question, and the service
-still writes the `reserve()` check around it.
+Both paths share the same shape: `ensureModifiable()` and
+`ensureOpenForReservation()` are public on Event, each owning its rule and
+its message, and the service invokes them instead of reimplementing the
+check.
+
+## Update
+
+2026-07-31 — `isPublished()` was replaced by `ensureOpenForReservation()`.
+
+The original decision left the two exceptions to ADR 0002 in different
+shapes: `update` called `ensureModifiable()` on the entity, while `reserve`
+asked `isPublished()` and then wrote its own check and its own message in
+the service. Adding a second rule — reservations are refused once `endsAt`
+has passed — meant the service would hold two pieces of domain logic and
+two message strings. That is the drift this ADR exists to bound.
+
+Moving both rules into `ensureOpenForReservation()` preserves what this ADR
+actually decided. The service still chooses *when* the check happens, so
+nothing extra is loaded inside the transaction holding the contended row,
+and `reserve()` still validates only quantity and stock. What changed is
+that the entity owns *what* the rule is.
+
+The exception to ADR 0002 is now about invocation order, not about where
+domain rules live — a narrower exception than the one first recorded here.

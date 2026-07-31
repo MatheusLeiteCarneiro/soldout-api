@@ -1,6 +1,7 @@
 package com.mlcdev.soldout.event;
 
 import com.mlcdev.soldout.event.exception.InvalidEventException;
+import com.mlcdev.soldout.event.exception.InvalidEventPeriodException;
 import com.mlcdev.soldout.event.exception.InvalidTicketTypeException;
 import com.mlcdev.soldout.event.exception.TicketTypeNotFoundException;
 import com.mlcdev.soldout.shared.persistence.BaseEntity;
@@ -166,7 +167,7 @@ public class Event extends BaseEntity {
 
     private void validatePeriod(Instant startsAt, Instant endsAt) {
         if (!endsAt.isAfter(startsAt)) {
-            throw new InvalidEventException("endsAt must be after startsAt");
+            throw new InvalidEventPeriodException("event endsAt must be after startsAt");
         }
     }
 

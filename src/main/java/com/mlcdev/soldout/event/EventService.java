@@ -76,6 +76,12 @@ public class EventService {
         return eventMapper.eventToEventDetailDTO(event);
     }
 
+    @Transactional
+    public void finish(UUID eventId){
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+        event.finish();
+    }
+
     private void applyDTOPatchToEntity(Event event, EventUpdateDTO dto){
         String newName= (dto.name() == null) ? event.getName() : dto.name();
         String newDescription= (dto.description() == null) ? event.getDescription() : dto.description();

@@ -30,17 +30,34 @@ sends `UPDATE ticket_types SET available_quantity = 0`.
 Read the TicketType with a pessimistic write lock inside the reservation
 transaction.
 
-    SELECT ... FROM ticket_types WHERE id = ? FOR UPDATE
-
 In Spring Data this is a `@Lock(LockModeType.PESSIMISTIC_WRITE)` on a
-repository method used only by the reservation path.
+repository method used only by the reservation path. The query joins the
+Event so ADR 0005 gets what it needs in the same round trip. Hibernate
+emits:
+
+    SELECT ... FROM ticket_types tt
+      JOIN events e ON e.id = tt.event_id
+     WHERE tt.id = ?
+       FOR NO KEY UPDATE OF tt
+
+`FOR NO KEY UPDATE` is what Hibernate maps PESSIMISTIC_WRITE to on
+Postgres. It is weaker than `FOR UPDATE` in one way: it does not block
+`FOR KEY SHARE`, the lock a child row takes when its foreign key points
+here. It still conflicts with itself, which is the only conflict this
+decision depends on, and it keeps a future OrderItem insert from queueing
+behind a reservation.
+
+`OF tt` limits the lock to one table. Without it a lock over a join takes
+a row in every table it touches, so reserving a ticket would lock the
+event too and serialize buyers of unrelated ticket types.
 
 The first transaction locks the row. The others block on the SELECT —
 they never read the stale value. When the first one commits, the next is
 released and reads the updated quantity, so `reserve()` throws
 NotEnoughTicketsException on its own.
 
-- No retry logic. The domain exception is the only one the client sees.
+- No retry logic. On the normal path the domain exception is the only
+  one the client sees.
 - The entity stays unchanged. Concurrency control lives in the query,
   not in the model (ADR 0002 stays intact).
 - A lock timeout is configured so a slow transaction cannot block the
@@ -55,6 +72,10 @@ NotEnoughTicketsException on its own.
   and heavy contention, the 11th request cannot even start.
 - Latency grows linearly with the queue. The last buyer in a line of
   1000 waits for all the others.
+- The lock timeout is a second failure mode. Waiting more than 3s raises
+  CannotAcquireLockException, not NotEnoughTicketsException. One is
+  final, the other is worth retrying, and the API has to tell them
+  apart.
 - Deadlock becomes possible once a single transaction locks more than
   one row — not an issue today, but it will be when Order reserves
   several ticket types at once.

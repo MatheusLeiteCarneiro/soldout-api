@@ -8,6 +8,7 @@ import com.mlcdev.soldout.event.exception.NotEnoughTicketsException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
+import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -97,6 +98,13 @@ class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ApiErrorDTO error = new ApiErrorDTO(status, "Unexpected error", request.getRequestURI());
         log.error("Unexpected inventory inconsistency error: {}",e.getMessage(), e);
         return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(CannotAcquireLockException.class)
+    public ResponseEntity<ApiErrorDTO> handlePessimisticLockTimeoutException(HttpServletRequest request){
+        int status = HttpStatus.SERVICE_UNAVAILABLE.value();
+        ApiErrorDTO error = new ApiErrorDTO(status, "Reservation temporarily unavailable, retry later", request.getRequestURI());
+        return ResponseEntity.status(status).header(HttpHeaders.RETRY_AFTER, "1").body(error);
     }
 
     @ExceptionHandler(Exception.class)

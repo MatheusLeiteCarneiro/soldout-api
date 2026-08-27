@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,8 +39,8 @@ class GlobalExceptionHandlerTest {
 
         ResponseEntity<ApiErrorDTO> response = handler.handleInvalidEventPeriod(exception, request);
 
-        assertBasicError(response, HttpStatus.BAD_REQUEST, "data validation not passed");
-        assertThat(response.getBody().errors())
+        ApiErrorDTO body = assertBasicError(response, HttpStatus.BAD_REQUEST, "data validation not passed");
+        assertThat(body.errors())
                 .containsExactly(new FieldErrorDTO("endsAt", message));
     }
 
@@ -89,8 +90,8 @@ class GlobalExceptionHandlerTest {
 
         ResponseEntity<ApiErrorDTO> response = handler.handleInventoryInconsistency(exception, request);
 
-        assertBasicError(response, HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error");
-        assertThat(response.getBody().error()).doesNotContain(exception.getMessage());
+        ApiErrorDTO body = assertBasicError(response, HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error");
+        assertThat(body.error()).doesNotContain(exception.getMessage());
     }
 
     @Test
@@ -111,22 +112,22 @@ class GlobalExceptionHandlerTest {
 
         ResponseEntity<ApiErrorDTO> response = handler.handleException(exception, request);
 
-        assertBasicError(response, HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error");
-        assertThat(response.getBody().error()).doesNotContain(exception.getMessage());
+        ApiErrorDTO body = assertBasicError(response, HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error");
+        assertThat(body.error()).doesNotContain(exception.getMessage());
     }
 
-    private void assertBasicError(
+    private ApiErrorDTO assertBasicError(
             ResponseEntity<ApiErrorDTO> response,
             HttpStatus expectedStatus,
             String expectedMessage
     ) {
-        ApiErrorDTO body = response.getBody();
+        ApiErrorDTO body = Objects.requireNonNull(response.getBody(), "response body must not be null");
 
         assertThat(response.getStatusCode()).isEqualTo(expectedStatus);
-        assertThat(body).isNotNull();
         assertThat(body.timestamp()).isNotNull();
         assertThat(body.status()).isEqualTo(expectedStatus.value());
         assertThat(body.error()).isEqualTo(expectedMessage);
         assertThat(body.path()).isEqualTo(requestPath);
+        return body;
     }
 }

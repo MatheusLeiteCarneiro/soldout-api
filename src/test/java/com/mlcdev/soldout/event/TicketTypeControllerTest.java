@@ -211,6 +211,7 @@ class TicketTypeControllerTest {
             verifyNoInteractions(ticketTypeService);
         }
 
+        @SuppressWarnings("DataFlowIssue")
         @Test
         void insertShouldReturnBadRequestWithZeroTotalQuantity() throws Exception {
             TicketTypeInsertDTO insertDTO = new TicketTypeInsertDTO(ticketName, ticketDescription, ticketPrice, 0);
@@ -223,6 +224,7 @@ class TicketTypeControllerTest {
             verifyNoInteractions(ticketTypeService);
         }
 
+        @SuppressWarnings("DataFlowIssue")
         @Test
         void insertShouldReturnBadRequestWithNegativeTotalQuantity() throws Exception {
             TicketTypeInsertDTO insertDTO = new TicketTypeInsertDTO(ticketName, ticketDescription, ticketPrice, -1);
@@ -268,6 +270,7 @@ class TicketTypeControllerTest {
             verifyNoInteractions(ticketTypeService);
         }
 
+        @SuppressWarnings("DataFlowIssue")
         @Test
         void reserveShouldReturnBadRequestWithZeroQuantity() throws Exception {
             ReserveTicketTypeDTO reserveDTO = new ReserveTicketTypeDTO(0);
@@ -280,6 +283,7 @@ class TicketTypeControllerTest {
             verifyNoInteractions(ticketTypeService);
         }
 
+        @SuppressWarnings("DataFlowIssue")
         @Test
         void reserveShouldReturnBadRequestWithNegativeQuantity() throws Exception {
             ReserveTicketTypeDTO reserveDTO = new ReserveTicketTypeDTO(-1);
